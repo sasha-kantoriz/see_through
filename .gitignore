@@ -64,6 +64,7 @@ target/
 package
 *~
 *.zip
+version.txt
 version.rb
 deploy/
 conf.yml
