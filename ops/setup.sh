@@ -12,7 +12,7 @@ echo "export SEE_THROUGH_HOME=`readlink -f $TEMP_DIR`" > $HOME_DIR/.env
 
 echo "Staging a Vagrant box ..."
 if [ ! -f $HOME_DIR/Vagrantfile ]; then
-    vagrant init ubuntu/trusty32   
+    vagrant init ubuntu/trusty32
 fi
 
 cp -u "$TEMP_DIR/Vagrantfile" box/

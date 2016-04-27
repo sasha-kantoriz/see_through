@@ -4,11 +4,6 @@ require_relative 'main_controller'
 require_relative 'time_class'
 require_relative 'mailler'
 
-# def send_time_check user
-#   utc_time = Time.now.getutc
-#   utc_time.strftime( "%H" )
-# end
-
 @email = Email.new
 @main_controller = MainController.new
 @time = TimeClass.new
@@ -84,8 +79,10 @@ def get_recently_merged_pr first_hr, repo
   recently_merged = ''
   recently_merged << "#{first_hr}<h2>Recently merged pull requests</h2>"
   @main_controller.get_repo_pr_by_state(repo, 'merged').each do |pull_request|
-    recently_merged << "<h3>Pull Request -  #{pull_request.title} <a href='https://github.com/#{repo}/pull/#{pull_request.pr_id}/'>##{pull_request.pr_id}</a></h3>
+    unless @time.check_time_pass(pull_request.updated_at, 24)
+      recently_merged << "<h3>Pull Request -  #{pull_request.title} <a href='https://github.com/#{repo}/pull/#{pull_request.pr_id}/'>##{pull_request.pr_id}</a></h3>
       <p>Author: #{pull_request.author}</p>"
+    end
   end
   recently_merged << "</div>"
 
@@ -97,7 +94,7 @@ def get_new_pr other_block
   if other_block.length > 0
     new_pr << '<hr><h2>New pull requests</h2>'
     other_block.each do |i|
-      if i[:index] == 3
+      unless @time.check_time_pass(i[:create_time], 24)
         new_pr << i[:text].to_s
       end
     end
@@ -125,7 +122,7 @@ def create_mail_message user_to, repo
         <p>Has conflicts: #{merge_status}</p>
         <p>Committers: #{pull_request.committer}</p>
         <br /><br />
-    "})
+    ", create_time: pull_request.created_at})
 
     if pull_request.author == user_to.user_login
       if importance == 2
@@ -160,8 +157,14 @@ Mime-Version: 1.0
 Content-Type: text/html
 
   #{your_problem_pr}
-  #{recently_merged}
-  #{new_pr}
+  #{
+  if recently_merged.include? "<p>"
+    recently_merged
+  end}
+  #{
+  if new_pr.include? "<p>"
+    new_pr
+  end}
   #{other_problem_pr}
 
 EOF
