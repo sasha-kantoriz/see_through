@@ -55,6 +55,7 @@ class Database
         :user_email => user.email,
         :notify_at => user.tz_shift,
         :git_hub_id => user.id,
+        :slack_id => user.slack_id,
         :enable => false,
     )
   end
