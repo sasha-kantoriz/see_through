@@ -2,7 +2,7 @@
 require 'octokit'
 require_relative 'main_controller'
 
-CLIENT = Octokit::Client.new(:access_token => ENV['GITHUB_TOKEN'])
+CLIENT = Octokit::Client.new(:access_token => ENV['SEE_THROUGH_TOKEN'])
 
 class OctokitClient
 
