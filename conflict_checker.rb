@@ -151,7 +151,7 @@ class ConflictChecker
                        title: "##{pr_data.number} - #{pr_data.title}",
                        title_link: "https://github.com/#{repo}/pull/#{pr_data.number}/",
                        pretext: "Hi #{user}!",
-                       text: "You've got some merge conflict.",
+                       text: "You've got a merge conflict!",
                        mrkdwn_in: [
                            "text",
                            "pretext"]
