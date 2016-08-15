@@ -1,7 +1,7 @@
 #!/bin/bash
 
-source $PWD/.profile
+source $HOME/.bash_profile
 
 cd $SEE_THROUGH_HOME_PATH
 
-/usr/bin/ruby conflict_checker.rb
+/home/ubuntu/.rvm/rubies/ruby-2.2.1-dev/bin/ruby conflict_checker.rb

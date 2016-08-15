@@ -16,7 +16,7 @@ class ConflictChecker
     @client = OctokitClient.new
     @controller = MainController.new
     @time = TimeClass.new
-    @logger = Logger.new('logfile.log')
+    @logger = Logger.new('../see_through.log')
 
     start
 

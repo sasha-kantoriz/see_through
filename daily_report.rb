@@ -14,7 +14,7 @@ repositories = config.get_repos
 users_from_yml = config.get_users_from_config_yml
 @controller = MainController.new
 @db = Database.new
-@logger = Logger.new('logfile.log')
+@logger = Logger.new('../see_through.log')
 
 @logger.info('daily_report start')
 

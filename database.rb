@@ -5,7 +5,7 @@ class Database
 
   def initialize
     init_database
-    @logger = Logger.new('logfile.log')
+    @logger = Logger.new('../see_through.log')
   end
 
   class User < ActiveRecord::Base
@@ -137,11 +137,11 @@ class Database
 
   def init_database
 
-    ActiveRecord::Base.logger = Logger.new(File.open('database.log', 'w'))
+    ActiveRecord::Base.logger = Logger.new(File.open('../database.log', 'w'))
 
     ActiveRecord::Base.establish_connection(
         :adapter => 'sqlite3',
-        :database => 'db/data.db'
+        :database => '../db/data.db'
     )
 
     ActiveRecord::Schema.new.migrations_paths

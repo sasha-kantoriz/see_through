@@ -2,7 +2,7 @@ require 'slack-ruby-client'
 
 class SlackClient
   def initialize
-    @logger = Logger.new('logfile.log')
+    @logger = Logger.new('../see_through.log')
     Slack.configure do |config|
       config.token = ENV['SEE_THROUGH_SLACK_TOKEN']
       fail 'Missing ENV[SEE_THROUGH_SLACK_TOKEN]!' unless config.token
