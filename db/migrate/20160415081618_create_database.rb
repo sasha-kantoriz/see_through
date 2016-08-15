@@ -1,4 +1,4 @@
-class CreatDatabase < ActiveRecord::Migration
+class CreateDatabase < ActiveRecord::Migration
   def change
     ActiveRecord::Schema.define do
 
