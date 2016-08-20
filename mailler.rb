@@ -4,7 +4,7 @@ require 'logger'
 class Email
 
   def initialize
-    @logger = Logger.new('logfile.log')
+    @logger = Logger.new('../see_through.log')
   end
 
   def send_mail (message, user_email)

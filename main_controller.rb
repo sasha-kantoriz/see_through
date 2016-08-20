@@ -82,7 +82,7 @@ class MainController
     if user_to_update == nil
       @db.create_new_user user
     else
-      user_to_update.update(enable: daily_report, notify_at: user.tz_shift, user_email: user.email)
+      user_to_update.update(enable: daily_report, notify_at: user.tz_shift, user_email: user.email, slack_id: user.slack_id)
     end
   end
 
