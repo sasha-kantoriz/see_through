@@ -148,4 +148,3 @@ class Database
 
   end
 end
-

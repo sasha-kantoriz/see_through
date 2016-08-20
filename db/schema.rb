@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160810101628) do
+ActiveRecord::Schema.define(version: 20160811204138) do
 
   create_table "commentors", force: :cascade do |t|
     t.integer  "pull_request_id"
@@ -57,11 +57,11 @@ ActiveRecord::Schema.define(version: 20160810101628) do
     t.string   "user_email"
     t.string   "git_email"
     t.integer  "git_hub_id"
-    t.string   "slack_id"
     t.string   "notify_at"
     t.boolean  "enable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "slack_id"
   end
 
 end

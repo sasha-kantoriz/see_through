@@ -35,4 +35,3 @@ class Config_reader
   private :read_repos, :read_users_from_config_yml
 
 end
-

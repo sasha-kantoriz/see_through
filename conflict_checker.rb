@@ -30,10 +30,6 @@ class ConflictChecker
         @controller.sync_user_with_config user
     end
 
-    Config_reader.new.get_users_from_config_yml.each do |user|
-      @controller.sync_user_with_config user
-    end
-
     @repositories.each do |repo|
 
       repository = repo.repository_name
@@ -89,7 +85,7 @@ class ConflictChecker
           end
         end
 
-        #create_mail repo, merged, conflict, old_pr_block, recipients
+        create_mail repo, merged, conflict, old_pr_block, recipients
 
         new_pull_requests.each do |pull|
           pr_data = @client.get_github_pr_by_number repository, pull
@@ -168,6 +164,7 @@ class ConflictChecker
 
     @slack_client.send_message(attachments, recipient)
   end
+  
 
   def create_mail (repo, merged, conflict, old_pr_block, recipients)
 
@@ -202,4 +199,3 @@ EOF
 end
 
 ConflictChecker.new
-
