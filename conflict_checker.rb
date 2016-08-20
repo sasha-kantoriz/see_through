@@ -139,7 +139,11 @@ class ConflictChecker
           if db_pr.pr_id.to_i == gh_pr.number.to_i
             this_pull = @client.get_github_pr_by_number repo, db_pr.pr_id
             if this_pull.mergeable == false
-              pull.push(this_pull)
+              if this_pull.state == "closed"
+                @controller.create_or_update_pr this_pull, repository
+              else
+                pull.push(this_pull)
+              end
             end
           end
         end
