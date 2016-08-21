@@ -59,7 +59,7 @@ class ConflictChecker
         merged = '<h2>Recently merged</h2><hr>'
         conflict = '<h2>Now in conflict</h2><hr>'
 
-        new_pull_requests = db_pr_numbers ^ github_pr_numbers
+        new_pull_requests = github_pr_numbers - db_pr_numbers
 
         check_pull_requests_state(new_pull_requests, repository).each do |pr|
           merged << "<h3>Pull Request -  #{pr.title} <a href='https://github.com/#{repository}/pull/#{pr.number}/'>##{pr.number}</a></h3>
