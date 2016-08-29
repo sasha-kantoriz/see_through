@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811204138) do
+ActiveRecord::Schema.define(version: 20160823083621) do
 
   create_table "commentors", force: :cascade do |t|
     t.integer  "pull_request_id"
@@ -25,6 +25,30 @@ ActiveRecord::Schema.define(version: 20160811204138) do
     t.string   "sent_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pull_request_metrics", force: :cascade do |t|
+    t.string  "author"
+    t.string  "number",            null: false
+    t.string  "repo"
+    t.string  "title"
+    t.boolean "merged"
+    t.boolean "mergeable"
+    t.string  "mergeable_state"
+    t.string  "create_time"
+    t.string  "update_time"
+    t.string  "state"
+    t.string  "additions"
+    t.string  "deletions"
+    t.string  "changed_files"
+    t.string  "commits"
+    t.string  "comments"
+    t.string  "committers"
+    t.string  "commentors"
+    t.string  "head_label"
+    t.string  "base_sha"
+    t.string  "head_sha"
+    t.string  "added_to_database", null: false
   end
 
   create_table "pull_requests", force: :cascade do |t|
