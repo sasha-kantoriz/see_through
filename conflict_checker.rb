@@ -164,7 +164,7 @@ class ConflictChecker
 
     @slack_client.send_message(attachments, recipient)
   end
-  
+
 
   def create_mail (repo, merged, conflict, old_pr_block, recipients)
 
