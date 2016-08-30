@@ -1,7 +1,6 @@
 require_relative 'database'
 require_relative 'octokit_client'
 
-
 class MainController
   def initialize
     @db = Database.new
@@ -37,7 +36,6 @@ class MainController
         end
         if pull_request.labels != pr.label
           pull_request.update(labels: pr.label)
-        
         end
     end  
   end
@@ -49,7 +47,6 @@ class MainController
         pull_request_metrics.update(k => v)
       end
     end
-    
   end
 
   def create_or_update_pr_metrics repo, number
