@@ -1,5 +1,6 @@
 #!/usr/bin/env rsuby
 require 'octokit'
+require 'pathname'
 require_relative 'main_controller'
 
 CLIENT = Octokit::Client.new(:access_token => ENV['SEE_THROUGH_TOKEN'])
@@ -102,6 +103,27 @@ class OctokitClient
 
   def check_pr_for_existing (pr_data, repo)
     @main_controller.create_or_update_pr pr_data, repo
+  end
+
+  def get_master_migrations(repo, path)
+    result = CLIENT.contents(repo, :path => path)
+    result_names = []
+    result.each do |file|
+      result_names << file.to_hash[:name]
+    end
+    result_names.sort_by {|m| m[/\d+__/].to_i}
+  end
+
+  def get_pr_migrations(pr_files, path)
+    result = []
+    pr_files.each do |file|
+      f = Pathname.new(file.to_hash[:filename])
+      file_name, file_path = f.basename.to_s, f.dirname.to_s
+      if file_path == path
+        result << file_name
+      end
+    end
+    result.sort_by {|m| m[/\d+__/].to_i}
   end
 
 end
