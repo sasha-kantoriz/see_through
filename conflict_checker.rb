@@ -130,6 +130,18 @@ class ConflictChecker
         repo_migrations_folders.each do |path|
           last_master_migration = @client.get_master_migrations(repository, path)[-1]
           prs_with_migration_conflict = check_for_migrations_conflicts(last_master_migration, path, prs_files_for_checking)
+          
+          prs_with_master_migr_conflict = check_master_migr_path_for_conflicts(repository, path, prs_files_for_checking)
+          
+          prs_with_master_migr_conflict.each do |pr, migration|
+            pull_request = @controller.get_pr_by_id(pr)[0]
+            user = pull_request[:author]
+            if user
+              recipient = @controller.get_user_by_login(user)[:slack_id]
+              create_slack_message_on_migr_conflict(repository, user, pull_request, path, migration, recipient, true)
+            end
+            @controller.update_pr_migration_conflict(pr, true)
+          end
 
           prs_with_migration_conflict.each do |pr|
             pull_request = @controller.get_pr_by_id(pr)[0]
@@ -146,6 +158,26 @@ class ConflictChecker
     @logger.info('conflict checker end')
   end
 
+  def check_master_migr_path_for_conflicts(repo, path, prs_files)
+    path_master_migrations = @client.get_master_migrations(repo, path)
+    prs_with_master_migr_conflict = {}
+    prs_files.each do |number, pr_files|
+      pr_migrations = @client.get_pr_migrations(pr_files, path)
+      if pr_migrations.length > 0
+        id = path_master_migrations.shift[/\d+__/].to_i
+        path_master_migrations.each do |migration|
+          next_id = migration[/\d+__/].to_i
+          if id + 1 != next_id
+            prs_with_master_migr_conflict[number] = migration
+            break
+          else
+            id = next_id
+          end
+        end
+      end
+    end
+    prs_with_master_migr_conflict
+  end
 
   def check_old_prs_with_migration_conflict(repo, migration_folders)
     still_conflicted = [].to_set
@@ -156,6 +188,7 @@ class ConflictChecker
     migration_folders.each do |path|
       last_master_migration = @client.get_master_migrations(repo, path)[-1]
       still_conflicted += check_for_migrations_conflicts(last_master_migration, path, old_prs_files)
+      still_conflicted += check_master_migr_path_for_conflicts(repo, path, old_prs_files).keys
     end
     old_prs_files.keys.to_set - still_conflicted
   end
@@ -211,13 +244,18 @@ class ConflictChecker
     return pull
   end
 
-  def create_slack_message_on_migr_conflict(repo, user, pr, path, last_master_migration, recipient)
+  def create_slack_message_on_migr_conflict(repo, user, pr, path, last_master_migration, recipient, master_conflict=false)
+    if master_conflict
+      text = "There is a database migration conflict on master at: #{path}/#{last_master_migration}"
+    else
+      text = "You've got a database migration conflict! Last master migration is: #{path}/#{last_master_migration}."
+    end
     attachments = [{
                        fallback: "DB migration Conflict",
                        title: "##{pr.pr_id} - #{pr.title}",
                        title_link: "https://github.com/#{repo}/pull/#{pr.pr_id}/",
                        pretext: "Hi #{user}!",
-                       text: "You've got a database migration conflict! Last master migration is: #{path}/#{last_master_migration}.",
+                       text: text,
                        mrkdwn_in: [
                            "text",
                            "pretext"]
