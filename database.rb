@@ -87,6 +87,13 @@ class Database
     pr.update(has_migration_conflict: has_migration_conflict)
   end
 
+  def update_pr_diff_sha(number, diff_sha, diff_updated)
+    PullRequest.where(pr_id: number).first.update({
+      :diff_sha => diff_sha, 
+      :diff_updated => diff_updated
+    })
+  end
+
 # Getters
   def get_daily_report_state (user_login)
     DailyReport.where(user_name: user_login).first

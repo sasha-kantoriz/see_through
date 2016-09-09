@@ -31,6 +31,13 @@ class Config_reader
     @profiles
   end
 
+  def get_activity_checker_configuration
+    activity_checker_conf = {}
+    activity_checker_conf[:timeout] = @config['activity_checker']['timeout']
+    activity_checker_conf[:recipients] = @config['activity_checker']['notify']
+    activity_checker_conf
+  end
+
   public :get_repos, :get_users_from_config_yml
   private :read_repos, :read_users_from_config_yml
 

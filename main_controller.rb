@@ -122,6 +122,10 @@ class MainController
     @db.update_pr_migration_conflict(pr_id, has_migration_conflict)
   end
 
+  def update_pr_diff_sha(id, diff_sha, diff_updated)
+    @db.update_pr_diff_sha(id, diff_sha, diff_updated)
+  end
+
   def get_recipients_list
     @db.get_recipients
   end
