@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'rest-client'
 gem 'slack-ruby-client'
 gem 'sqlite3'
 gem 'activerecord'
