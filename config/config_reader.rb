@@ -34,7 +34,7 @@ class Config_reader
   def get_activity_checker_configuration
     activity_checker_conf = {}
     activity_checker_conf[:timeout] = @config['activity_checker']['timeout']
-    activity_checker_conf[:recipients] = @config['activity_checker']['notify']
+    activity_checker_conf[:recipients] = @config['activity_checker']['notify']['slack']
     activity_checker_conf
   end
 

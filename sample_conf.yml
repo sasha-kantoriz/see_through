@@ -1,8 +1,9 @@
 activity_checker:
   timeout: 5
   notify:
-    - "debug"
-    - "@sasha"
+    slack:
+      - "#debug"
+      - "@sasha"
 
 repositories: 
   - name: "owner/repo"
