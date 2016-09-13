@@ -1,3 +1,6 @@
+# Make sibling folder to `see_through`, called `config` 
+# and there create file `conf.yml` of the following view:
+
 activity_checker:
   timeout: 5
   notify:
