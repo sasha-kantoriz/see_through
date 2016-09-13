@@ -31,6 +31,20 @@ class ActivityChecker
       repo = repository.repository_name
       prs = @client.get_all_github_pr(repo)
       prs.each do |pr|
+
+        pr_labels = get_pr_labels(repo, pr[:number])
+
+        has_label_for_ignoring = false
+        pr_labels.each do |label|
+          if @conf[:labels].include? label
+            has_label_for_ignoring = true
+            break
+          end
+        end
+        if has_label_for_ignoring
+          next
+        end
+
         pr_github_diff_sha = get_pr_diff_sha(repo, pr)
         db_pr = @controller.get_pr_by_id(pr.number).first
 
@@ -72,6 +86,12 @@ class ActivityChecker
                             :accept => 'application/vnd.github.diff'
                           })
     Digest::SHA1.hexdigest(diff.body)
+  end
+
+  def get_pr_labels(repo, number)
+    pr_labels = CLIENT.issue(repo, number)[:labels]
+    labels = pr_labels.map {|label| label[:name]}
+    labels
   end
 
   def create_slack_notification_on_outdated_pr(repo, pr, days_without_update, recipient, user=nil)
