@@ -85,6 +85,9 @@ class ActivityChecker
         notify = true
       end
     end
+    if notify
+      @controller.update_pr_notified_at(pr[:pr_id], current_time)
+    end
     notify
   end
 
