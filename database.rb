@@ -94,6 +94,10 @@ class Database
     })
   end
 
+  def update_pr_notified_at(id, notified_at)
+    PullRequest.where(pr_id: id).first.update(notified_at: notified_at)
+  end
+
 # Getters
   def get_daily_report_state (user_login)
     DailyReport.where(user_name: user_login).first

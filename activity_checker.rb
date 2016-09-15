@@ -50,20 +50,42 @@ class ActivityChecker
         else
           days_without_diff_update = TimeDifference.between(db_pr[:diff_updated], current_time).in_days.to_i
           if days_without_diff_update >= @conf[:timeout]
-            @conf[:recipients].each do |receiver|
-              create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, receiver)
-            end
-            login = db_pr[:author]
-            user = @controller.get_user_by_login(login)
-            if user and user[:enable]
-              recipient = user[:slack_id]
-              create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, recipient, login)
+                
+            if pr_need_notification?(db_pr, current_time, days_without_diff_update)
+              
+              @conf[:recipients].each do |receiver|
+                create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, receiver)
+              end
+              login = db_pr[:author]
+              user = @controller.get_user_by_login(login)
+              if user and user[:enable]
+                recipient = user[:slack_id]
+                create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, recipient, login)
+              end
             end
           end
         end
       end
     end
     @logger.info('activity checker end')
+  end
+
+  def pr_need_notification?(pr, current_time, days_inactive)
+    if !pr[:notified_at]
+      @controller.update_pr_notified_at(pr[:pr_id], current_time)
+      return true
+    end
+    notify = false
+    if days_inactive <= 30
+      if TimeDifference.between(pr[:notified_at], current_time).in_days.to_i >= 3
+        notify = true
+      end
+    elsif days_inactive > 30
+      if TimeDifference.between(pr[:notified_at], current_time).in_days.to_i >= 10
+        notify = true
+      end
+    end
+    notify
   end
 
   def get_pr_diff_sha(repo, pr)  

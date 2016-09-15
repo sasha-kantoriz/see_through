@@ -126,6 +126,10 @@ class MainController
     @db.update_pr_diff_sha(id, diff_sha, diff_updated)
   end
 
+  def update_pr_notified_at(id, notified_at)
+    @db.update_pr_notified_at(id, notified_at)
+  end
+
   def get_recipients_list
     @db.get_recipients
   end
