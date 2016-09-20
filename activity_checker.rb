@@ -64,14 +64,13 @@ class ActivityChecker
         else
           days_without_diff_update = TimeDifference.between(db_pr[:diff_updated], current_time).in_days.to_i
           if days_without_diff_update >= @conf[:timeout]
-            @conf[:recipients].each do |receiver|
-              create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, receiver)
-            end
-            login = db_pr[:author]
-            user = @controller.get_user_by_login(login)
+            pr_notificants = @conf[:recipients].to_set
+            user = @controller.get_user_by_login(db_pr[:author])
             if user and user[:enable]
-              recipient = user[:slack_id]
-              create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, recipient, login)
+              pr_notificants << user[:slack_id]
+            end
+            pr_notificants.each do |receiver|
+              create_slack_notification_on_outdated_pr(repo, db_pr, days_without_diff_update, receiver)
             end
           end
         end
@@ -94,12 +93,11 @@ class ActivityChecker
     labels
   end
 
-  def create_slack_notification_on_outdated_pr(repo, pr, days_without_update, recipient, user=nil)
+  def create_slack_notification_on_outdated_pr(repo, pr, days_without_update, recipient)
     attachments = [{
                        fallback: "Outdated Pull Request",
                        title: "##{pr.pr_id} - #{pr.title}",
                        title_link: "https://github.com/#{repo}/pull/#{pr.pr_id}/",
-                       pretext: "Hi #{user}!",
                        text: "This pull request hasn't been updated for #{days_without_update} days.",
                        mrkdwn_in: [
                            "text",
