@@ -3,6 +3,8 @@
 
 activity_checker:
   timeout: 5
+  labels_for_pr_ignoring:
+    - "experiment"
   notify:
     slack:
       - "#debug"

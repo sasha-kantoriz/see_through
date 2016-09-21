@@ -35,6 +35,7 @@ class Config_reader
     activity_checker_conf = {}
     activity_checker_conf[:timeout] = @config['activity_checker']['timeout']
     activity_checker_conf[:recipients] = @config['activity_checker']['notify']['slack']
+    activity_checker_conf[:labels] = @config['activity_checker']['labels_for_pr_ignoring']
     activity_checker_conf
   end
 
