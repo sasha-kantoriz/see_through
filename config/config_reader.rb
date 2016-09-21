@@ -4,7 +4,7 @@ require_relative 'profile'
 class Config_reader
 
   def initialize
-    @config = YAML.load_file('conf.yml')
+    @config = YAML.load_file('../config/conf.yml')
     @repositories = []
     @profiles = []
   end
@@ -35,6 +35,7 @@ class Config_reader
     activity_checker_conf = {}
     activity_checker_conf[:timeout] = @config['activity_checker']['timeout']
     activity_checker_conf[:recipients] = @config['activity_checker']['notify']['slack']
+    activity_checker_conf[:labels] = @config['activity_checker']['labels_for_pr_ignoring']
     activity_checker_conf
   end
 
